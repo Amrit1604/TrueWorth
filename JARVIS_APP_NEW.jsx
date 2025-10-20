@@ -78,8 +78,8 @@ function App() {
               <div className="arc-ring arc-ring-2"></div>
             </div>
             <h1 className="jarvis-title">
-              <span className="title-main">TRUEWORTH</span>
-              <span className="title-sub">Price Intelligence Platform</span>
+              <span className="title-main">JARVIS</span>
+              <span className="title-sub">Price Intelligence</span>
             </h1>
           </div>
           <div className="status-indicator">
@@ -97,7 +97,7 @@ function App() {
               ref={inputRef}
               type="text"
               className="search-input"
-              placeholder="What would you like to search today?"
+              placeholder="What can I help you find today, Sir?"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               disabled={loading}
@@ -242,7 +242,7 @@ function App() {
       )}
 
       <footer className="jarvis-footer">
-        <p>TrueWorth Price Intelligence System v2.0 | Powered by TURBO MODE ⚡</p>
+        <p>JARVIS Price Intelligence System v2.0 | Powered by TURBO MODE ⚡</p>
         <p className="footer-sub">Real-time market analysis across multiple platforms</p>
       </footer>
     </div>

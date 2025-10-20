@@ -17,7 +17,7 @@ class FlipkartScraper(BaseScraper):
         super().__init__("Flipkart", "https://www.flipkart.com")
 
     def search(self, query, max_results=10):
-        """Search Flipkart for products"""
+        """Search Flipkart for products - TURBO MODE"""
         if not self.driver:
             self.setup_driver()
 
@@ -25,15 +25,15 @@ class FlipkartScraper(BaseScraper):
             return []
 
         try:
-            self.safe_wait(2, 4)
+            self.safe_wait(0.5, 1)  # ⚡ Reduced delay
 
             search_url = f"{self.base_url}/search?q={query.replace(' ', '%20')}"
-            print(f"🔍 {self.platform_name}: Searching {search_url}")
+            print(f"⚡ {self.platform_name}: TURBO searching...")
 
             self.driver.get(search_url)
 
-            # Wait for page load
-            time.sleep(3)
+            # FASTER wait
+            time.sleep(2)  # ⚡ Reduced from 3-5s
 
             products = []
 
@@ -50,15 +50,14 @@ class FlipkartScraper(BaseScraper):
             for selector in product_selectors:
                 try:
                     elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    if elements and len(elements) > 3:  # Ensure we have actual product listings
-                        product_elements = elements[:max_results]
-                        print(f"✅ {self.platform_name}: Using selector {selector}, found {len(elements)} elements")
+                    if elements and len(elements) > 3:
+                        product_elements = elements[:min(max_results, 5)]  # ⚡ Max 5
                         break
                 except:
                     continue
 
             if not product_elements:
-                print(f"⚠️ {self.platform_name}: No products found")
+                print(f"⚠️ {self.platform_name}: No products")
                 return []
 
             for element in product_elements:
@@ -69,11 +68,11 @@ class FlipkartScraper(BaseScraper):
                 except Exception as e:
                     continue
 
-            print(f"✅ {self.platform_name}: Found {len(products)} products")
+            print(f"⚡ {self.platform_name}: {len(products)} products in TURBO mode")
             return products
 
         except Exception as e:
-            print(f"❌ {self.platform_name}: Search error - {e}")
+            print(f"❌ {self.platform_name}: Error - {e}")
             return []
 
     def _extract_product(self, element):

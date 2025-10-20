@@ -13,8 +13,8 @@ class ScraperManager:
     def __init__(self):
         self.scrapers = {}
         self.cache = {}
-        self.cache_ttl = 600  # 10 minutes cache
-        self.max_workers = 5  # Concurrent scraper threads
+        self.cache_ttl = 300  # ⚡ 5 minutes (was 10)
+        self.max_workers = 8  # ⚡ 8 workers (was 5)
 
     def register_scraper(self, name: str, scraper):
         """Register a platform scraper"""
@@ -127,17 +127,17 @@ class ScraperManager:
                 for platform in platforms
             }
 
-            # Collect results as they complete
+            # Collect results as they complete - BALANCED TIMEOUT
             for future in as_completed(future_to_platform):
                 platform = future_to_platform[future]
                 try:
-                    products = future.result(timeout=30)  # 30 second timeout per platform
+                    products = future.result(timeout=20)  # ⚡ 20s timeout (balanced)
                     all_products.extend(products)
                     platform_stats[platform] = {
                         'count': len(products),
                         'status': 'success'
                     }
-                    print(f"✅ {platform}: {len(products)} products")
+                    print(f"⚡ {platform}: {len(products)} products")
                 except Exception as e:
                     errors[platform] = str(e)
                     platform_stats[platform] = {

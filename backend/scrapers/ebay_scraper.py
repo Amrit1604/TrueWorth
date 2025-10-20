@@ -16,7 +16,7 @@ class EbayScraper(BaseScraper):
         super().__init__("eBay", "https://www.ebay.in")
 
     def search(self, query, max_results=10):
-        """Search eBay India for products"""
+        """Search eBay India for products - TURBO MODE"""
         if not self.driver:
             self.setup_driver()
 
@@ -24,16 +24,16 @@ class EbayScraper(BaseScraper):
             return []
 
         try:
-            self.safe_wait(2, 4)
+            self.safe_wait(0.5, 1)  # ⚡ Reduced delay
 
             search_url = f"{self.base_url}/sch/i.html?_nkw={query.replace(' ', '+')}"
-            print(f"🔍 {self.platform_name}: Searching {search_url}")
+            print(f"⚡ {self.platform_name}: TURBO searching...")
 
             self.driver.get(search_url)
 
-            # Wait for results
+            # FASTER wait
             try:
-                WebDriverWait(self.driver, 15).until(
+                WebDriverWait(self.driver, 5).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, ".s-item"))
                 )
             except TimeoutException:
@@ -43,7 +43,8 @@ class EbayScraper(BaseScraper):
             products = []
             product_elements = self.driver.find_elements(By.CSS_SELECTOR, ".s-item")
 
-            for element in product_elements[1:max_results+1]:  # Skip first (it's usually a header)
+            # ⚡ Max 5 for speed
+            for element in product_elements[1:min(max_results, 5)+1]:
                 try:
                     product = self._extract_product(element)
                     if product:
@@ -51,7 +52,7 @@ class EbayScraper(BaseScraper):
                 except:
                     continue
 
-            print(f"✅ {self.platform_name}: Found {len(products)} products")
+            print(f"⚡ {self.platform_name}: {len(products)} products in TURBO mode")
             return products
 
         except Exception as e:

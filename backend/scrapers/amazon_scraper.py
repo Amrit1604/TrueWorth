@@ -17,7 +17,7 @@ class AmazonScraper(BaseScraper):
         super().__init__("Amazon", "https://www.amazon.in")
 
     def search(self, query, max_results=10):
-        """Search Amazon India for products"""
+        """Search Amazon India for products - TURBO MODE"""
         if not self.driver:
             self.setup_driver()
 
@@ -25,16 +25,16 @@ class AmazonScraper(BaseScraper):
             return []
 
         try:
-            self.safe_wait(2, 4)
+            self.safe_wait(0.5, 1)  # ⚡ Reduced delay
 
             search_url = f"{self.base_url}/s?k={query.replace(' ', '+')}"
-            print(f"🔍 {self.platform_name}: Searching {search_url}")
+            print(f"⚡ {self.platform_name}: TURBO searching...")
 
             self.driver.get(search_url)
 
-            # Wait for results
+            # Wait for results with balanced timeout
             try:
-                WebDriverWait(self.driver, 15).until(
+                WebDriverWait(self.driver, 10).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "[data-component-type='s-search-result']"))
                 )
             except TimeoutException:
@@ -44,7 +44,8 @@ class AmazonScraper(BaseScraper):
             products = []
             product_elements = self.driver.find_elements(By.CSS_SELECTOR, "[data-component-type='s-search-result']")
 
-            for element in product_elements[:max_results]:
+            # ⚡ Only process first 5 for speed
+            for element in product_elements[:min(max_results, 5)]:
                 try:
                     product = self._extract_product(element)
                     if product:
@@ -52,11 +53,11 @@ class AmazonScraper(BaseScraper):
                 except Exception as e:
                     continue
 
-            print(f"✅ {self.platform_name}: Found {len(products)} products")
+            print(f"⚡ {self.platform_name}: {len(products)} products in TURBO mode")
             return products
 
         except Exception as e:
-            print(f"❌ {self.platform_name}: Search error - {e}")
+            print(f"❌ {self.platform_name}: Error - {e}")
             return []
 
     def _extract_product(self, element):

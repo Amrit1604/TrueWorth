@@ -1,4 +1,4 @@
-﻿/* ⚡ TRUEWORTH HOLOGRAPHIC UI - PROFESSIONAL PRICE INTELLIGENCE ⚡ */
+/* ⚡ JARVIS HOLOGRAPHIC UI - TONY STARK STYLE ⚡ */
 
 * {
   margin: 0;
@@ -29,8 +29,6 @@ body {
   min-height: 100vh;
   position: relative;
   padding-bottom: 80px;
-  width: 100%;
-  margin: 0 auto;
 }
 
 .jarvis-bg {
@@ -191,7 +189,6 @@ body {
   letter-spacing: 4px;
   background: linear-gradient(135deg, var(--jarvis-cyan), var(--jarvis-blue));
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 30px var(--jarvis-glow);
 }
@@ -350,8 +347,6 @@ body {
   box-shadow: 0 0 20px rgba(255, 51, 102, 0.2);
   z-index: 10;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .error-icon {
@@ -368,7 +363,6 @@ body {
 .loading-panel {
   max-width: 600px;
   margin: 60px auto;
-  padding: 0 30px;
   text-align: center;
   z-index: 10;
   position: relative;
@@ -434,8 +428,6 @@ body {
   box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
   z-index: 10;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .banner-icon {
@@ -504,8 +496,6 @@ body {
   gap: 15px;
   z-index: 10;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .rec-icon {
@@ -673,7 +663,6 @@ body {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -748,8 +737,6 @@ body {
   backdrop-filter: blur(10px);
   z-index: 10;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .meta-grid {
@@ -853,24 +840,9 @@ body {
   .best-deal-banner {
     flex-direction: column;
     text-align: center;
-    margin-left: 20px;
-    margin-right: 20px;
   }
 
   .meta-grid {
     grid-template-columns: 1fr;
-  }
-
-  .error-panel,
-  .loading-panel,
-  .recommendation-panel,
-  .metadata-panel {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-
-  .products-section {
-    padding-left: 20px;
-    padding-right: 20px;
   }
 }

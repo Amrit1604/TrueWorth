@@ -34,30 +34,53 @@ class BaseScraper(ABC):
         ]
 
     def setup_driver(self):
-        """Setup Chrome driver with stealth options"""
+        """Setup Chrome driver with TURBO performance options"""
         if self.driver:
             return
 
         chrome_options = Options()
 
-        # Stealth and performance options
+        # SPEED OPTIMIZATIONS - JARVIS TURBO MODE
         chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_argument("--disable-images")  # ⚡ Don't load images
+        # JS ENABLED - Sites need it to load products
+        chrome_options.add_argument("--blink-settings=imagesEnabled=false")  # ⚡ Block images
         chrome_options.add_argument("--disable-extensions")
-        chrome_options.add_argument("--disable-background-timer-throttling")
-        chrome_options.add_argument("--disable-renderer-backgrounding")
+        chrome_options.add_argument("--disable-plugins")
+        chrome_options.add_argument("--disable-background-networking")
+        chrome_options.add_argument("--disable-default-apps")
+        chrome_options.add_argument("--disable-sync")
+        chrome_options.add_argument("--disable-translate")
+        chrome_options.add_argument("--disable-logging")
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_argument("--log-level=3")
+
+        # Performance boost
+        chrome_options.add_argument("--window-size=800,600")  # Smaller = faster
+        chrome_options.page_load_strategy = 'normal'  # ⚡ Let sites load properly
 
         # Random user agent
         user_agent = random.choice(self.user_agents)
         chrome_options.add_argument(f"--user-agent={user_agent}")
 
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
+
+        # Disable images via prefs
+        prefs = {
+            "profile.managed_default_content_settings.images": 2,
+            "profile.default_content_setting_values.notifications": 2,
+            "profile.managed_default_content_settings.stylesheets": 2,
+            "profile.managed_default_content_settings.cookies": 2,
+            "profile.managed_default_content_settings.plugins": 2,
+            "profile.managed_default_content_settings.popups": 2,
+            "profile.managed_default_content_settings.geolocation": 2,
+            "profile.managed_default_content_settings.media_stream": 2,
+        }
+        chrome_options.add_experimental_option("prefs", prefs)
 
         try:
             service = Service(ChromeDriverManager().install())
@@ -66,18 +89,18 @@ class BaseScraper(ABC):
             # Hide webdriver property
             self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
-            # Set timeouts
-            self.driver.set_page_load_timeout(30)
-            self.driver.implicitly_wait(10)
+            # BALANCED TIMEOUTS FOR SPEED + RELIABILITY
+            self.driver.set_page_load_timeout(15)  # ⚡ 15s max (balanced)
+            self.driver.implicitly_wait(5)  # ⚡ 5s max (balanced)
 
-            print(f"✅ {self.platform_name}: Driver initialized")
+            print(f"⚡ {self.platform_name}: TURBO driver initialized")
 
         except Exception as e:
             print(f"❌ {self.platform_name}: Driver setup failed - {e}")
             self.driver = None
 
-    def safe_wait(self, min_delay=2, max_delay=5):
-        """Implement respectful delays between requests"""
+    def safe_wait(self, min_delay=0.5, max_delay=1.5):
+        """TURBO MODE: Minimal delays for speed"""
         current_time = time.time()
 
         if self.last_request_time:

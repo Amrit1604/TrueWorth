@@ -16,7 +16,7 @@ class SnapdealScraper(BaseScraper):
         super().__init__("Snapdeal", "https://www.snapdeal.com")
 
     def search(self, query, max_results=10):
-        """Search Snapdeal for products"""
+        """Search Snapdeal for products - TURBO MODE"""
         if not self.driver:
             self.setup_driver()
 
@@ -24,18 +24,19 @@ class SnapdealScraper(BaseScraper):
             return []
 
         try:
-            self.safe_wait(2, 4)
+            self.safe_wait(0.5, 1)  # ⚡ Reduced delay
 
             search_url = f"{self.base_url}/search?keyword={query.replace(' ', '%20')}"
-            print(f"🔍 {self.platform_name}: Searching {search_url}")
+            print(f"⚡ {self.platform_name}: TURBO searching...")
 
             self.driver.get(search_url)
-            time.sleep(3)
+            time.sleep(2)  # ⚡ Reduced from 3s
 
             products = []
             product_elements = self.driver.find_elements(By.CSS_SELECTOR, ".product-tuple-listing")
 
-            for element in product_elements[:max_results]:
+            # ⚡ Max 5 for speed
+            for element in product_elements[:min(max_results, 5)]:
                 try:
                     product = self._extract_product(element)
                     if product:
@@ -43,7 +44,7 @@ class SnapdealScraper(BaseScraper):
                 except:
                     continue
 
-            print(f"✅ {self.platform_name}: Found {len(products)} products")
+            print(f"⚡ {self.platform_name}: {len(products)} products in TURBO mode")
             return products
 
         except Exception as e:
